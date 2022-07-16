@@ -1,0 +1,105 @@
+import pandas as pd
+def write_init():
+    df = pd.DataFrame(columns=["Roll", "Name", "Age"])
+    write(df)
+
+def write_add():
+    df = pd.read_csv("Data-1.csv")
+    write(df)
+
+def write(df):
+    parts = int(input("Ener the number of Student data to be entered:"))
+
+    for _ in range(parts):
+        dp = input("Roll of the student:")
+        st = input("Name of the student {}:".format(dp))
+        et = input("Age of the student {}:".format(dp))
+        df1 = pd.DataFrame(data=[[dp,st,et]],columns=["Roll", "Name", "Age"])
+        df = pd.concat([df,df1], axis=0)
+    df.index = range(len(df.index))
+    #print(df)
+    df.to_csv('Data-2.csv', index=False)
+
+def display():
+    df = pd.read_csv("Data-1.csv")
+    print(df)
+    
+def delete():
+    df = pd.read_csv("Data-1.csv")
+    temp = int(input("1. Delete by Roll number\n2. Delete by name\n"))
+    
+    if temp == 1:
+        df.set_index('Roll', inplace = True)
+        df = df.drop(int(input('Enter the roll no. of the student: ')))
+    
+    elif temp == 2:
+        df.set_index('Name', inplace = True)
+        df = df.drop(input('Enter the name of the student: '))
+        df.to_csv('Data-1.csv', index=True)
+        df = pd.read_csv("Data-1.csv")
+        df.set_index('Roll', inplace = True)
+    
+    else:
+        print('Given input is wrong')   
+    
+    #df = df.drop(0)
+    print(df)
+    df.to_csv('Data-1.csv', index=True)
+
+def analysis():
+    #df = open("Data-1.csv",'r')
+    #for column in df:
+    #    print(column[2])
+    import csv
+    ages = []
+    
+    with open("Data-1.csv") as f:
+        reader = csv.reader(f)
+    
+        for row in reader:
+            #print(row)
+            if row[2] == 'Age':
+                continue
+            else:
+                ages.append(int(row[2]))
+    
+    minm = min(ages)
+    maxm = max(ages)
+    sumages = sum(ages)
+    avg = sumages/len(ages)
+    srt = sorted(ages)
+    temp = (len(ages) - 1) // 2
+    
+    if len(ages) % 2 != 0:
+        median = srt[temp]
+    else:
+        median = (srt[temp] + srt[temp + 1])/2
+        
+    print(minm, maxm, avg, median)
+    #print(row[2])
+    
+    with open("Data-1.csv") as f:
+        reader = csv.reader(f)
+    
+        print("Yongest student(s):")
+        for row in reader:
+            #print(row)
+            if row[2] == str(minm):
+                print(row)
+    
+    with open("Data-1.csv") as f:
+        reader = csv.reader(f)
+        
+        print("Eldest student(s):")
+        for row in reader:
+            if row[2] == str(maxm):
+                print(row)
+        
+    print("Average age of the class is:", avg)
+    print("Median age of the class is:", median)
+    
+#write()
+#display()
+#delete()
+#write_init()
+analysis()
